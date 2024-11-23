@@ -1,0 +1,40 @@
+.drivers-container {
+  display: flex;
+  margin-top: 60px;
+}
+
+.driver-option {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin: 0 12px;
+  padding: 10px;
+  border: 1px solid yellow;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.driver-info {
+  margin-bottom: 10px;
+}
+
+.btn-choice-driver {
+  margin-top: 10px;
+  border: 0px;
+  width: 130px;
+  height: 35px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.5s;
+  padding: 5px;
+  background-color: black;
+  color: yellow;
+  border: 1px solid yellow;
+}
+
+.btn-choice-driver:hover {
+  background-color: yellow;
+  color: black;
+}

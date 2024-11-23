@@ -1,0 +1,65 @@
+.historic-form {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin-left: 80px;
+}
+
+select {
+  border: 1px solid yellow;
+  background-color: black;
+  color: white;
+  height: 35px;
+  width: 80px;
+  font-size: 1em;
+  transition: 0.5s;
+  margin: 0 0.3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.filter-btn {
+  border: 0px;
+  width: 130px;
+  height: 35px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.5s;
+  padding: 5px;
+  background-color: black;
+  color: yellow;
+  border: 1px solid yellow;
+}
+
+.filter-btn:hover {
+  background-color: yellow;
+  color: black;
+}
+
+#userid-input-historic {
+  margin: 0;
+  height: 34.8px;
+}
+
+.historic-customer-container {
+  display: flex;
+  align-items: center;
+  padding: 0 80px;
+}
+
+.historic-container {
+  color: white;
+  margin: 30px 40px 0 0;
+  padding: 10px;
+  border: 1px solid yellow;
+  border-radius: 8px;
+}
+
+.historic-info {
+  margin-bottom: 8px;
+}
+
+strong {
+  color: yellow;
+}

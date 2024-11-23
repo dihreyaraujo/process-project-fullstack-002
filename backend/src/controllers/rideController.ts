@@ -43,13 +43,25 @@ export const getRideEstimate = async (req: Request, res: Response) => {
   }
 };
 
+const createNowDate = () => {
+  const nowDate = new Date();
+  const day = nowDate.getDay();
+  const month = nowDate.getMonth();
+  const year = nowDate.getUTCFullYear();
+  const hour = nowDate.getHours();
+  const minute = nowDate.getMinutes();
+  return `${day}/${month}/${year} - ${hour}:${minute}`; 
+}
+
 export const rideConfirm = async (req: Request, res: Response) => {
   try {
     const { customer_id, origin, destination, driver: { id: driver_id, name: driver_name }, distance, duration, value } = req.body;
     await validateRideConfirm(customer_id, origin, destination, driver_id, distance);
+    
     const rideDatabase = {
       customer_id,
       origin,
+      date: createNowDate(),
       destination,
       distance,
       duration,
