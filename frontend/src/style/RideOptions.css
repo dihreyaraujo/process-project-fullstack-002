@@ -5,12 +5,6 @@
   margin-top: 20px;
 }
 
-#mapGoogle {
-  width: 80vw;
-  height: 40vh;
-  margin: 0;
-}
-
 .drivers-info {
   display: flex;
 }
