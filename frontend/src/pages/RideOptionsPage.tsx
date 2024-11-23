@@ -1,9 +1,8 @@
 import { Component } from 'react';
-import MapElement from '../googleMaps';
-
+import MapPage from '../googleMaps';
 
 interface RideRequestPageProps {
-  onStatusChange: (statusPage:string) => void;
+  onStatusChange: (statusPage: string) => void;
 }
 
 class RideOptionsPage extends Component<RideRequestPageProps> {
@@ -45,17 +44,17 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
         rating: '2.9',
         rate: 29.80
       }
-    ]
+    ];
 
     const driversElementHtml = driversMock.map((driver) => {
       return (
-        <div className="driver-option">
-          <h1 className="driver-info">{ driver.name }</h1>
-          <p className="driver-info">Descrição: { driver.description }</p>
-          <p className="driver-info">Veículo: { driver.vehicle }</p>
-          <p className="driver-info">Avaliação: { driver.rating }</p>
-          <p className="driver-info">R${ driver.rate.toFixed(2) }</p>
-          <button type="submit" id={ driver.id.toString() } className="btn-choice-driver" onClick={this.submitBtn}>Escolher</button>
+        <div className="driver-option" key={driver.id}>
+          <h1 className="driver-info">{driver.name}</h1>
+          <p className="driver-info">Descrição: {driver.description}</p>
+          <p className="driver-info">Veículo: {driver.vehicle}</p>
+          <p className="driver-info">Avaliação: {driver.rating}</p>
+          <p className="driver-info">R${driver.rate.toFixed(2)}</p>
+          <button type="submit" id={driver.id.toString()} className="btn-choice-driver" onClick={this.submitBtn}>Escolher</button>
         </div>
       );
     });
@@ -63,13 +62,24 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
     return driversElementHtml;
   }
 
-  render () {
+  coordenadas = {
+    origin: { 
+      lat: -22.520039,
+      lng: -44.104240 
+    },
+    destination: { 
+      lat: -22.544530,
+      lng: -44.170601
+    }
+  }
+
+  render() {
     return (
       <div className="drivers-container">
         <div className='drivers-info'>
-          { this.driverList() }
+          {this.driverList()}
         </div>
-        <MapElement />
+        <MapPage origin={this.coordenadas.origin} destination={this.coordenadas.destination} />
       </div>
     );
   }
