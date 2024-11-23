@@ -1,6 +1,18 @@
 .drivers-container {
   display: flex;
-  margin-top: 60px;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-top: 20px;
+}
+
+#mapGoogle {
+  width: 80vw;
+  height: 40vh;
+  margin: 0;
+}
+
+.drivers-info {
+  display: flex;
 }
 
 .driver-option {

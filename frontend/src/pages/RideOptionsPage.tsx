@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import MapWithRoute from '../services/GoogleMapsComponent';
+import MapElement from '../googleMaps';
 
 
 interface RideRequestPageProps {
@@ -66,8 +66,10 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
   render () {
     return (
       <div className="drivers-container">
-        { this.driverList() }
-        <MapWithRoute />
+        <div className='drivers-info'>
+          { this.driverList() }
+        </div>
+        <MapElement />
       </div>
     );
   }
