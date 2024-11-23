@@ -3,6 +3,8 @@ import { calculateRoute } from '../services/googleMapsService';
 import { validateRideRequest, validateRideConfirm, validateDriver, validateCustomer } from '../services/validationService';
 import { DriverRepository } from '../repositories/driverRepository';
 import { RideRepository } from '../repositories/rideRepository';
+import { driversMock } from '../mocks/driversMock';
+import { mockHistoric } from '../mocks/historicMock';
 
 export const getRideEstimate = async (req: Request, res: Response) => {
   try {
@@ -12,9 +14,25 @@ export const getRideEstimate = async (req: Request, res: Response) => {
 
     const { distance, duration, startLocation, endLocation } = await calculateRoute(origin, destination);
 
-    const drivers = await DriverRepository.getAllDrivers()
+    // const drivers = await DriverRepository.getAllDrivers();
+    const drivers = driversMock;
 
-    const options = drivers
+    const updatedDriversToResponseFormat = driversMock.map(driver => {
+      const [rating, ...commentParts] = driver.rating.split(' ');
+      const rateNumber = parseFloat(driver.rate.replace('R$', '').replace(',', '.').replace('/km', ''));
+      const comment = commentParts.join(' ');
+      return {
+        ...driver,
+        review: {
+          rating,
+          comment
+        },
+        rate: rateNumber,
+        rating: undefined
+      };
+    });
+
+    const options = updatedDriversToResponseFormat
       .filter((driver) => distance >= driver.minKm)
       .map((driver) => ({
         id: driver.id,
@@ -22,8 +40,8 @@ export const getRideEstimate = async (req: Request, res: Response) => {
         description: driver.description,
         vehicle: driver.vehicle,
         review: {
-          rating: driver.rating,
-          comment: driver.comment,
+          rating: driver.review.rating,
+          comment: driver.review.comment,
         },
         value: Number((distance * driver.rate).toFixed(2)),
       }));
@@ -59,6 +77,7 @@ export const rideConfirm = async (req: Request, res: Response) => {
     await validateRideConfirm(customer_id, origin, destination, driver_id, distance);
     
     const rideDatabase = {
+      id: mockHistoric.length - 1,
       customer_id,
       origin,
       date: createNowDate(),
@@ -69,7 +88,8 @@ export const rideConfirm = async (req: Request, res: Response) => {
       driver_name,
       value
     }
-    await RideRepository.saveRide(rideDatabase);
+    // await RideRepository.saveRide(rideDatabase);
+    mockHistoric.push(rideDatabase);
     res.status(200).json({ success: true });
   } catch (error: any) {
     const errorMessage = error.message;
@@ -90,25 +110,26 @@ export const customerRides = async (req: Request, res: Response) => {
 
     validateCustomer(customer_id);
 
-    const ridesCostumer = await RideRepository.getRidesByCustomer(customer_id);
+    // const ridesCostumer = await RideRepository.getRidesByCustomer(customer_id);
+    const ridesCostumer = mockHistoric.filter((ride) => ride.customer_id === customer_id);
 
-    if (!ridesCostumer) {
+    if (ridesCostumer.length === 0) {
       throw new Error("Nenhuma corrida registrada");
     }
 
     if (driver_id) {
-      validateDriver(Number(driver_id));
+      await validateDriver(Number(driver_id));
       const filterRidesByDriver = ridesCostumer.filter((ride) => ride.driver_id === Number(driver_id));
       const rides = filterRidesByDriver.map((ride) => {
         const formatRidesResponse = {
           id: ride.id,
-          date: "",
+          date: ride.date,
           origin: ride.origin,
           destination: ride.destination,
           distance: ride.distance,
           duration: ride.duration,
           driver: {
-            id: Number(driver_id),
+            id: Number(ride.driver_id),
             name: ride.driver_name
           },
           value: ride.value
@@ -124,13 +145,13 @@ export const customerRides = async (req: Request, res: Response) => {
       const ridesNoFilter = ridesCostumer.map((ride) => {
         const formatRidesResponse = {
           id: ride.id,
-          date: "",
+          date: ride.date,
           origin: ride.origin,
           destination: ride.destination,
           distance: ride.distance,
           duration: ride.duration,
           driver: {
-            id: Number(driver_id),
+            id: Number(ride.driver_id),
             name: ride.driver_name
           },
           value: ride.value

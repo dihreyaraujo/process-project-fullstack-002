@@ -46,7 +46,22 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
   ]
 
   state = {
-    historicCostumerList: this.mockHistoric
+    historicCostumerList: this.mockHistoric,
+    historicFilter: [],
+    driverFilter: 'Todos'
+  }
+
+  onChangeDriver = ({ target }: any) => {
+    this.setState(({ driverFilter: target.value }));
+  }
+
+  applyFilterBtn = () => {
+    const { driverFilter } = this.state;
+    if (driverFilter !== 'Todos') {
+      this.rideHistoricListByDriverName();
+    } else {
+      this.rideHistoricList();
+    }
   }
 
   rideListFilter = () => {
@@ -95,12 +110,33 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
           <p>Usuário:</p>
           <input type="text" id="userid-input-historic"/>
         </label>
-        <select>
+        <select onChange={(event) => this.onChangeDriver(event)}>
+          <option>Todos</option>
           { elementOptionsDrivers }
         </select>
-        <button type="button" className="filter-btn">Aplicar</button>
+        <button type="button" className="filter-btn" onClick={this.applyFilterBtn}>Aplicar</button>
       </form>
     )
+  }
+
+  rideHistoricListByDriverName = () => {
+    const { historicCostumerList, driverFilter } = this.state;
+    const driverListFilter = historicCostumerList.filter((driver) => driver.driver_name === driverFilter);
+    const historicListElement = driverListFilter.map((historic: any) => {
+      const historicHtml = (
+        <div className="historic-container">
+          <p className="historic-info"><strong>Data:</strong> { historic.date }</p>
+          <p className="historic-info"><strong>Motorista:</strong> { historic.driver_name }</p>
+          <p className="historic-info"><strong>Origem:</strong> { historic.origin }</p>
+          <p className="historic-info"><strong>Destino:</strong> { historic.destination }</p>
+          <p className="historic-info"><strong>Distância:</strong> { historic.distance }</p>
+          <p className="historic-info"><strong>Duração:</strong> { historic.duration }</p>
+          <p className="historic-info"><strong>Valor:</strong> R${ historic.value }</p>
+        </div>
+      );
+      return historicHtml;
+    });
+    this.setState({ historicFilter: historicListElement });
   }
 
   rideHistoricList = () => {
@@ -119,15 +155,16 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
       );
       return historicHtml;
     });
-    return historicListElement;
+    this.setState({ historicFilter: historicListElement });;
   }
 
   render () {
+    const { historicFilter } = this.state;
     return (
       <div>
         { this.rideListFilter() }
         <div className="historic-customer-container">
-          { this.state.historicCostumerList ? this.rideHistoricList() : '' }
+          { historicFilter }
         </div>
       </div>
     )

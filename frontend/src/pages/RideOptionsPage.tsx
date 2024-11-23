@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import MapWithRoute from '../services/GoogleMapsComponent';
+
 
 interface RideRequestPageProps {
   onStatusChange: (statusPage:string) => void;
@@ -65,6 +67,7 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
     return (
       <div className="drivers-container">
         { this.driverList() }
+        <MapWithRoute />
       </div>
     );
   }

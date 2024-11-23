@@ -26,7 +26,7 @@ class RideRequestPage extends Component<RideRequestPageProps> {
           <input type='text' id='destination-input' />
         </label>
         <label htmlFor='ride-request-button'>
-          <button id='ride-request-button' type='submit' onClick={this.submitBtn}>Solicitar Viagem</button>
+          <button id='ride-request-button' type='submit' onClick={this.submitBtn}>Calcular Viagem</button>
         </label>
       </form>
     );

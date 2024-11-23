@@ -6,10 +6,9 @@ class Driver extends Model {
   name?: string;
   description?: string;
   vehicle?: string;
-  rate!: number;
+  rate!: string;
   minKm!: number;
-  rating!: number;
-  comment?: string;
+  rating!: string;
 };
 
 Driver.init(
@@ -31,20 +30,16 @@ Driver.init(
       type: DataTypes.STRING,
       allowNull: false
     },
+    rating: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     rate: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.STRING,
       allowNull: false
     },
     minKm: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    rating: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    comment: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   },

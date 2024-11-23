@@ -8,9 +8,9 @@
 select {
   border: 1px solid yellow;
   background-color: black;
-  color: white;
+  color: yellow;
   height: 35px;
-  width: 80px;
+  width: 85px;
   font-size: 1em;
   transition: 0.5s;
   margin: 0 0.3px;
