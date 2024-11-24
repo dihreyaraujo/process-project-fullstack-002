@@ -40,7 +40,7 @@ export const getRideEstimate = async (req: Request, res: Response) => {
         description: driver.description,
         vehicle: driver.vehicle,
         review: {
-          rating: driver.review.rating,
+          rating: Number(driver.review.rating.split('')[0]),
           comment: driver.review.comment,
         },
         value: Number((distance * driver.rate).toFixed(2)),
@@ -61,15 +61,15 @@ export const getRideEstimate = async (req: Request, res: Response) => {
   }
 };
 
-const createNowDate = () => {
-  const nowDate = new Date();
-  const day = nowDate.getDay();
-  const month = nowDate.getMonth();
-  const year = nowDate.getUTCFullYear();
-  const hour = nowDate.getHours();
-  const minute = nowDate.getMinutes();
-  return `${day}/${month}/${year} - ${hour}:${minute}`; 
-}
+// const createNowDate = () => {
+//   const nowDate = new Date();
+//   const day = nowDate.getDay();
+//   const month = nowDate.getMonth();
+//   const year = nowDate.getUTCFullYear();
+//   const hour = nowDate.getHours();
+//   const minute = nowDate.getMinutes();
+//   return `${day}/${month}/${year} - ${hour}:${minute}`; 
+// }
 
 export const rideConfirm = async (req: Request, res: Response) => {
   try {
@@ -80,7 +80,7 @@ export const rideConfirm = async (req: Request, res: Response) => {
       id: mockHistoric.length - 1,
       customer_id,
       origin,
-      date: createNowDate(),
+      date: new Date(),
       destination,
       distance,
       duration,
@@ -126,8 +126,8 @@ export const customerRides = async (req: Request, res: Response) => {
           date: ride.date,
           origin: ride.origin,
           destination: ride.destination,
-          distance: ride.distance,
-          duration: ride.duration,
+          distance: Number(ride.distance.toFixed(2)),
+          duration: ride.duration + 'minutos',
           driver: {
             id: Number(ride.driver_id),
             name: ride.driver_name
@@ -138,7 +138,7 @@ export const customerRides = async (req: Request, res: Response) => {
       })
       const formatResponseWithDriver = {
         customer_id,
-        rides
+        rides: rides.sort((rideA, rideB) => rideB.date.getTime() - rideA.date.getTime())
       }
       res.status(200).json(formatResponseWithDriver);
     } else {
@@ -161,7 +161,7 @@ export const customerRides = async (req: Request, res: Response) => {
   
       const formatResponse = {
         customer_id,
-        rides: ridesNoFilter
+        rides: ridesNoFilter.sort((rideA, rideB) => rideB.date.getTime() - rideA.date.getTime())
       };
   
       res.status(200).json(formatResponse);

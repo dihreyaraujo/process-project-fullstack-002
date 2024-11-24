@@ -1,22 +1,39 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const calculateRoute = async (origin: string, destination: string) => {
   const apiKey = process.env.GOOGLE_API_KEY;
-  const response = await axios.get(
-    `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${apiKey}`
+  const response = await axios.post(
+    `https://routes.googleapis.com/directions/v2:computeRoutes?key=${apiKey}`, {
+      origin: {
+        address: origin
+      },
+      destination: {
+        address: destination
+      },
+      travelMode: 'DRIVE',
+      languageCode: 'pt-BR',
+    }, {
+      headers: {
+        'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration,routes.legs.startLocation,routes.legs.endLocation',
+        'Content-Type': 'application/json'
+      }
+    }
   );
 
   const data = response.data.routes[0];
   const infoRoute = {
-    distance: data.legs[0].distance.value / 1000,
-    duration: data.legs[0].duration.text,
+    distance: data.distanceMeters / 1000,
+    duration: Number(data.duration.replace(/\D/g, '')) / 60,
     startLocation: {
-      latitude: data.legs[0].start_location.lat,
-      longitude: data.legs[0].start_location.lng,
+      latitude: data.legs[0].startLocation.latLng.latitude,
+      longitude: data.legs[0].startLocation.latLng.longitude,
     },
     endLocation: {
-      latitude: data.legs[0].end_location.lat,
-      longitude: data.legs[0].end_location.lng,
+      latitude: data.legs[0].endLocation.latLng.latitude,
+      longitude: data.legs[0].endLocation.latLng.longitude,
     }
   };
   return infoRoute;
