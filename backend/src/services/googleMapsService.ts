@@ -1,7 +1,8 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export const calculateRoute = async (origin: string, destination: string) => {
   const apiKey = process.env.GOOGLE_API_KEY;

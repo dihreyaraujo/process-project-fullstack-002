@@ -1,60 +1,42 @@
 import { Component } from 'react';
 import MapPage from '../googleMaps';
+import { choiceDriver } from '../services/callBackend';
 
 interface RideRequestPageProps {
   onStatusChange: (statusPage: string) => void;
+  driversOption: () => any;
 }
 
 class RideOptionsPage extends Component<RideRequestPageProps> {
-  submitBtn = () => {
+  submitBtn = async ({ target }: any) => {
+    const ridesInfo = this.props.driversOption();
+    const driverChoice = {
+      customer_id: ridesInfo.customer_id,
+      origin: ridesInfo.origin,
+      destination: ridesInfo.destination,
+      distance: ridesInfo.distance,
+      driver: {
+        id: target.id,
+        name: ridesInfo.options.filter((driver: any) => driver.id === Number(target.id))
+      },
+      value: ridesInfo.value
+    };
+    await choiceDriver(driverChoice);
     this.props.onStatusChange('rideHistoric');
   }
 
   driverList = () => {
-    const driversMock = [
-      {
-        id: 1,
-        name: 'Homer',
-        description: 'Muito atencioso e dirige bem com segurança',
-        vehicle: 'Corolla',
-        rating: '4.5',
-        rate: 22.50
-      },
-      {
-        id: 2,
-        name: 'Cristiano',
-        description: 'Bom no volante e muito simpático e carismático',
-        vehicle: 'Civic',
-        rating: '4.9',
-        rate: 18.50
-      },
-      {
-        id: 3,
-        name: 'Alex',
-        description: 'Deixo você no destino em tempo recorde',
-        vehicle: 'Ônix',
-        rating: '3.9',
-        rate: 15.68
-      },
-      {
-        id: 4,
-        name: 'Roberto',
-        description: 'Dirige com cuidado e ar-condicionado ligado',
-        vehicle: 'Honda Fit',
-        rating: '2.9',
-        rate: 29.80
-      }
-    ];
+    const drivers = this.props.driversOption().options;
 
-    const driversElementHtml = driversMock.map((driver) => {
+    const driversElementHtml = drivers.map((driver: any) => {
       return (
         <div className="driver-option" key={driver.id}>
           <h1 className="driver-info">{driver.name}</h1>
           <p className="driver-info">Descrição: {driver.description}</p>
           <p className="driver-info">Veículo: {driver.vehicle}</p>
-          <p className="driver-info">Avaliação: {driver.rating}</p>
-          <p className="driver-info">R${driver.rate.toFixed(2)}</p>
-          <button type="submit" id={driver.id.toString()} className="btn-choice-driver" onClick={this.submitBtn}>Escolher</button>
+          <p className="driver-info">Avaliação: {driver.review.rating}</p>
+          <p className="driver-info">R${driver.value}</p>
+          <button type="button" id={driver.id.toString()} className="btn-choice-driver" onClick={(event) => this.submitBtn(event)}>Escolher</button>
         </div>
       );
     });
@@ -64,12 +46,12 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
 
   coordenadas = {
     origin: { 
-      lat: -22.520039,
-      lng: -44.104240 
+      lat: this.props.driversOption().origin.latitude,
+      lng: this.props.driversOption().origin.longitude 
     },
     destination: { 
-      lat: -22.544530,
-      lng: -44.170601
+      lat: this.props.driversOption().destination.latitude,
+      lng: this.props.driversOption().destination.longitude
     }
   }
 

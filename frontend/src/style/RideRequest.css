@@ -9,6 +9,10 @@
   margin-top: 140px;
 }
 
+#rideErrorMessage {
+  color: red;
+}
+
 label {
   margin-bottom: 20px;
 }

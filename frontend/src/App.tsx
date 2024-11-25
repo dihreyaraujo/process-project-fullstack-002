@@ -10,7 +10,8 @@ import './style/RideHistoric.css';
 
 class App extends Component {
   state = {
-    page: 'rideRequest'
+    page: 'rideRequest',
+    rideOptions: {}
   }
 
   homePageBtn = () => {
@@ -19,6 +20,10 @@ class App extends Component {
 
   changePage = (statusPage: string) => {
     this.setState({ page: statusPage });
+  }
+
+  rideOptionsEstimate = (rideOptions: object) => {
+    this.setState({ rideOptions });
   }
 
   render() {
@@ -32,9 +37,9 @@ class App extends Component {
         </header>
         { 
         page === 'rideRequest' 
-        ? <RideRequestPage onStatusChange={ this.changePage } /> 
+        ? <RideRequestPage onStatusChange={ this.changePage } onStatusRideOptions={this.rideOptionsEstimate} /> 
         : page === 'rideOptions' 
-        ? <RideOptionsPage onStatusChange={ this.changePage } /> 
+        ? <RideOptionsPage onStatusChange={ this.changePage } driversOption={ () => this.state.rideOptions } /> 
         : <RideHistoricPage onStatusChange={ this.changePage } /> }
       </div>
     );
