@@ -1,7 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import sequelize from '../database';
 
-class Driver extends Model {
+export default class Driver extends Model {
   id?: number;
   name?: string;
   description?: string;
@@ -9,45 +9,47 @@ class Driver extends Model {
   rate!: string;
   minKm!: number;
   rating!: string;
-};
 
-Driver.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    vehicle: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    rating: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    rate: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    minKm: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    }
-  },
-  {
-    sequelize,
-    modelName: 'Driver',
-    tableName: 'drivers',
+  static initModel(sequelize: Sequelize) {
+    Driver.init(
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          primaryKey: true
+        },
+        name: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        description: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
+        vehicle: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        rating: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        rate: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        minKm: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+        }
+      },
+      {
+        sequelize,
+        modelName: 'Driver',
+        tableName: 'drivers',
+        timestamps: false
+      }
+    );
   }
-);
 
-export default Driver;
+};

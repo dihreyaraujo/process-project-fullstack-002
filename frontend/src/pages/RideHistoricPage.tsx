@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { rideHistoric } from "../services/callBackend";
+import { getDrivers, rideHistoric } from "../services/callBackend";
 import { driversMock } from "../mocks/driversMock";
 
 interface RideRequestPageProps {
@@ -13,7 +13,12 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     historicFilter: [],
     driverFilter: 'Todos',
     customer_id: '',
-    errorMessage: ''
+    errorMessage: '',
+    formFilter: ''
+  }
+
+  async componentDidMount(): Promise<void> {
+    await this.rideListFilter()
   }
 
   onChangeDriver = ({ target }: any) => {
@@ -44,13 +49,14 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     this.setState({ customer_id: target.value });
   }
 
-  rideListFilter = () => {
-    const elementOptionsDrivers = driversMock.map((driver: any) => {
+  rideListFilter = async () => {
+    const drivers = await getDrivers();
+    const elementOptionsDrivers = drivers.map((driver: any) => {
       return (
         <option id={ driver.id }>{ driver.name }</option>
       )
     })
-    return (
+    const filterDrivers = (
       <form className="historic-form">
         <label htmlFor="userid-input">
           <p>Usuário:</p>
@@ -63,6 +69,7 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
         <button type="button" className="filter-btn" onClick={this.applyFilterBtn}>Aplicar</button>
       </form>
     )
+    this.setState({ formFilter: filterDrivers });
   }
 
   createFormatDate = (date: string) => {
@@ -116,10 +123,10 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
   }
 
   render () {
-    const { historicFilter, errorMessage } = this.state;
+    const { historicFilter, errorMessage, formFilter } = this.state;
     return (
       <div>
-        { this.rideListFilter() }
+        { formFilter }
         { errorMessage !== '' ? <p style={{ margin: "0 0 0 50px" }} id="rideErrorMessage">{errorMessage}</p> : '' }
         <div className="historic-customer-container">
           { errorMessage === "" && historicFilter }

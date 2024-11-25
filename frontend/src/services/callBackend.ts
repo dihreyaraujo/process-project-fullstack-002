@@ -25,3 +25,8 @@ export const rideHistoric = async (customer_id: string) => {
     throw new Error(err.response.data.error_description);
   }
 }
+
+export const getDrivers = async () => {
+  const responseDrivers = await axios.get('http://localhost:8080/ride/drivers');
+  return responseDrivers.data;
+}

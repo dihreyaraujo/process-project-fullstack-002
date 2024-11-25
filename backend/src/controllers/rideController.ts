@@ -3,7 +3,7 @@ import { calculateRoute } from '../services/googleMapsService';
 import { validateRideRequest, validateRideConfirm, validateDriver, validateCustomer } from '../services/validationService';
 import { DriverRepository } from '../repositories/driverRepository';
 import { RideRepository } from '../repositories/rideRepository';
-import { driversMock } from '../mocks/driversMock';
+// import { driversMock } from '../mocks/driversMock';
 import { mockHistoric } from '../mocks/historicMock';
 
 export const getRideEstimate = async (req: Request, res: Response) => {
@@ -14,10 +14,9 @@ export const getRideEstimate = async (req: Request, res: Response) => {
 
     const { distance, duration, startLocation, endLocation } = await calculateRoute(origin, destination);
 
-    // const drivers = await DriverRepository.getAllDrivers();
-    const drivers = driversMock;
+    const drivers = await DriverRepository.getAllDrivers();
 
-    const updatedDriversToResponseFormat = driversMock.map(driver => {
+    const updatedDriversToResponseFormat = drivers.map((driver) => {
       const [rating, ...commentParts] = driver.rating.split(' ');
       const rateNumber = parseFloat(driver.rate.replace('R$', '').replace(',', '.').replace('/km', ''));
       const comment = commentParts.join(' ');
@@ -67,10 +66,9 @@ export const rideConfirm = async (req: Request, res: Response) => {
     await validateRideConfirm(customer_id, origin, destination, driver_id, distance);
     
     const rideDatabase = {
-      id: mockHistoric.length - 1,
       customer_id,
       origin,
-      date: new Date(),
+      date: new Date().toString(),
       destination,
       distance,
       duration,
@@ -78,8 +76,9 @@ export const rideConfirm = async (req: Request, res: Response) => {
       driver_name,
       value
     }
-    // await RideRepository.saveRide(rideDatabase);
-    mockHistoric.push(rideDatabase);
+    console.log(rideDatabase);
+    await RideRepository.saveRide(rideDatabase);
+    // mockHistoric.push(rideDatabase);
     res.status(200).json({ success: true });
   } catch (error: any) {
     const errorMessage = error.message;
@@ -100,8 +99,8 @@ export const customerRides = async (req: Request, res: Response) => {
 
     validateCustomer(customer_id);
 
-    // const ridesCostumer = await RideRepository.getRidesByCustomer(customer_id);
-    const ridesCostumer = mockHistoric.filter((ride) => ride.customer_id === customer_id);
+    const ridesCostumer = await RideRepository.getRidesByCustomer(customer_id);
+    // const ridesCostumer = mockHistoric.filter((ride) => ride.customer_id === customer_id);
 
     if (ridesCostumer.length === 0) {
       throw new Error("Nenhuma corrida registrada");
@@ -110,7 +109,7 @@ export const customerRides = async (req: Request, res: Response) => {
     if (driver_id) {
       await validateDriver(Number(driver_id));
       const filterRidesByDriver = ridesCostumer.filter((ride) => ride.driver_id === Number(driver_id));
-      const rides = filterRidesByDriver.map((ride) => {
+      const rides = filterRidesByDriver.map((ride: any) => {
         const formatRidesResponse = {
           id: ride.id,
           date: ride.date,
@@ -128,7 +127,7 @@ export const customerRides = async (req: Request, res: Response) => {
       })
       const formatResponseWithDriver = {
         customer_id,
-        rides: rides.sort((rideA, rideB) => rideB.date.getTime() - rideA.date.getTime())
+        rides: rides.sort((rideA, rideB) => new Date(rideB.date).getTime() - new Date(rideA.date).getTime())
       }
       res.status(200).json(formatResponseWithDriver);
     } else {
@@ -151,7 +150,7 @@ export const customerRides = async (req: Request, res: Response) => {
   
       const formatResponse = {
         customer_id,
-        rides: ridesNoFilter.sort((rideA, rideB) => rideB.date.getTime() - rideA.date.getTime())
+        rides: ridesNoFilter.sort((rideA: any, rideB: any) => new Date(rideB.date).getTime() - new Date(rideA.date).getTime())
       };
   
       res.status(200).json(formatResponse);
