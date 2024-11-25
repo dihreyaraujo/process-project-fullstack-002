@@ -13,7 +13,7 @@ export const validateRideRequest = (customer_id: string, origin: string, destina
 export const validateRideConfirm = async (customer_id: string, origin: string, destination: string, driver_id: number, distance: number) => {
   validateRideRequest(customer_id, origin, destination);
   // const validateDriver = await DriverRepository.getDriverById(driver_id);
-  const validateDriver = driversMock.find((driver) => driver.id === driver_id);
+  const validateDriver = driversMock.find((driver) => driver.id === Number(driver_id));
   if (!validateDriver) {
     throw new Error("Motorista informado não foi encontrado")
   } else if (distance < validateDriver.minKm) {

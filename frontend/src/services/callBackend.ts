@@ -16,3 +16,12 @@ export const choiceDriver = async (rideHistoricObject: any) => {
     throw new Error(err.response.data.error_description);
   }
 }
+
+export const rideHistoric = async (customer_id: string) => {
+  try {
+    const responseHistoric = await axios.get(`http://localhost:8080/ride/${customer_id}`);
+    return responseHistoric.data;
+  } catch (err: any) {
+    throw new Error(err.response.data.error_description);
+  }
+}

@@ -8,21 +8,31 @@ interface RideRequestPageProps {
 }
 
 class RideOptionsPage extends Component<RideRequestPageProps> {
+  state = {
+    errorMessage: ''
+  }
+
+
   submitBtn = async ({ target }: any) => {
-    const ridesInfo = this.props.driversOption();
-    const driverChoice = {
-      customer_id: ridesInfo.customer_id,
-      origin: ridesInfo.origin,
-      destination: ridesInfo.destination,
-      distance: ridesInfo.distance,
-      driver: {
-        id: target.id,
-        name: ridesInfo.options.filter((driver: any) => driver.id === Number(target.id))
-      },
-      value: ridesInfo.value
-    };
-    await choiceDriver(driverChoice);
-    this.props.onStatusChange('rideHistoric');
+    try {
+      const ridesInfo = this.props.driversOption();
+      const driverChoice = {
+        customer_id: ridesInfo.customer_id,
+        origin: ridesInfo.originName,
+        destination: ridesInfo.destinationName,
+        distance: ridesInfo.distance,
+        duration: ridesInfo.duration,
+        driver: {
+          id: target.id,
+          name: ridesInfo.options.find((driver: any) => driver.id === Number(target.id)).name
+        },
+        value: ridesInfo.options.find((driver: any) => driver.id === Number(target.id)).value
+      };
+      await choiceDriver(driverChoice);
+      this.props.onStatusChange('rideHistoric');
+    } catch (err: any) {
+      this.setState({ errorMessage: err.message })
+    }
   }
 
   driverList = () => {
@@ -56,11 +66,13 @@ class RideOptionsPage extends Component<RideRequestPageProps> {
   }
 
   render() {
+    const { errorMessage } = this.state;
     return (
       <div className="drivers-container">
         <div className='drivers-info'>
           {this.driverList()}
         </div>
+        { errorMessage !== '' ? <p id='rideErrorMessage'>{errorMessage}</p> : '' }
         <MapPage origin={this.coordenadas.origin} destination={this.coordenadas.destination} />
       </div>
     );

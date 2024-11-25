@@ -52,7 +52,7 @@ export const getRideEstimate = async (req: Request, res: Response) => {
       origin: startLocation,
       destination: endLocation,
       distance,
-      duration,
+      duration: duration.toString(),
       options,
       routeResponse: {}
     });
@@ -60,16 +60,6 @@ export const getRideEstimate = async (req: Request, res: Response) => {
     res.status(400).json({ error_code: "INVALID_DATA", error_description: error.message });
   }
 };
-
-// const createNowDate = () => {
-//   const nowDate = new Date();
-//   const day = nowDate.getDay();
-//   const month = nowDate.getMonth();
-//   const year = nowDate.getUTCFullYear();
-//   const hour = nowDate.getHours();
-//   const minute = nowDate.getMinutes();
-//   return `${day}/${month}/${year} - ${hour}:${minute}`; 
-// }
 
 export const rideConfirm = async (req: Request, res: Response) => {
   try {
@@ -176,4 +166,9 @@ export const customerRides = async (req: Request, res: Response) => {
       res.status(400).json({ error_code: "INVALID_DATA", error_description: errorMessage });
     }
   }
+}
+
+export const getDrivers = async (req: Request, res: Response) => {
+  const drivers = await DriverRepository.getAllDrivers();
+  res.status(200).json(drivers);
 }

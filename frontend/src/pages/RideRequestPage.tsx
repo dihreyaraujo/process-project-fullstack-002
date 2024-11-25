@@ -19,7 +19,7 @@ class RideRequestPage extends Component<RideRequestPageProps> {
     try {
       const { customer_id, origin, destination } = this.state
       const responseRideOptions = await rideRequestInfo(customer_id, origin, destination);
-      this.props.onStatusRideOptions(responseRideOptions);
+      this.props.onStatusRideOptions({ ...responseRideOptions, customer_id, originName: origin, destinationName: destination });
       this.props.onStatusChange('rideOptions');
     } catch (err: any) {
       this.setState({ error: err.message });

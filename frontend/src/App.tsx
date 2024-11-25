@@ -30,10 +30,10 @@ class App extends Component {
     const { page } = this.state;
     return (
       <div className="app">
-        <header onClick={this.homePageBtn}>
-          <img src={ TaxxerLogo } alt='taxiLogo' className='taxiLogo'/>
-          <h1 id='taxxerH'>Taxxer</h1>
-          <p id='taxxerSiteP'>.com.br</p>
+        <header>
+          <img src={ TaxxerLogo } alt='taxiLogo' className='taxiLogo' onClick={this.homePageBtn}/>
+          <h1 id='taxxerH' onClick={this.homePageBtn}>Taxxer</h1>
+          <p id='taxxerSiteP' onClick={this.homePageBtn}>.com.br</p>
         </header>
         { 
         page === 'rideRequest' 
