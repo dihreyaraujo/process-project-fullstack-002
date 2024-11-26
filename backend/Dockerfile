@@ -1,5 +1,20 @@
-FROM node:16
+FROM node:18 AS build
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
 RUN npm install
-CMD ["npm", "run", "start"]
+
+COPY . .
+
+RUN npm run build
+
+FROM node:18
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+COPY package*.json ./
+
+RUN npm install --only=production
+
+EXPOSE 8080
+CMD ["node", "dist/server.js"]

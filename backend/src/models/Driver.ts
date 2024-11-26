@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import sequelize from '../database';
 
 export default class Driver extends Model {
   id?: number;

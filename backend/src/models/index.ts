@@ -4,19 +4,18 @@ import Driver from "./Driver";
 import Ride from "./Ride";
 
 const config: any = {
-  username: 'postgres',
-  password: 'didijk123',
-  database: 'postgres',
-  host: 'localhost',
+  username: 'admin',
+  password: 'admin',
+  database: 'taxidb',
+  host: 'database',
   port: 5432,
-  dialect: 'postgres',
 }
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: config.host,
   dialect: 'postgres',
   port: config.port,
-  dialectModule: pg,
+  dialectModule: pg
 });
 
 Driver.initModel(sequelize);
