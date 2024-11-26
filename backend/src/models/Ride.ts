@@ -1,16 +1,16 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
-export default class Ride extends Model {
-  id?: number;
-  customer_id?: string;
+export default class Ride extends Model implements IRide {
+  id!: number;
+  customer_id!: string;
   date!: string;
-  origin?: string;
-  destination?: string;
-  distance?: number;
-  duration?: string;
-  driver_id?: number;
-  driver_name?: string;
-  value?: number;
+  origin!: string;
+  destination!: string;
+  distance!: number;
+  duration!: string;
+  driver_id!: number;
+  driver_name!: string;
+  value!: number;
 
   static initModel(sequelize: Sequelize) {
     Ride.init(

@@ -1,10 +1,10 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
-export default class Driver extends Model {
-  id?: number;
-  name?: string;
-  description?: string;
-  vehicle?: string;
+export default class Driver extends Model implements IDriver {
+  id!: number;
+  name!: string;
+  description!: string;
+  vehicle!: string;
   rate!: string;
   minKm!: number;
   rating!: string;
