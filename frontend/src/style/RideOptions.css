@@ -19,6 +19,8 @@
   border: 1px solid yellow;
   border-radius: 8px;
   flex: 1;
+  min-width: 379px;
+  max-width: 380px;
 }
 
 .driver-info {
