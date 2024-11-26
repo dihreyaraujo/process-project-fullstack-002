@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import MapPage from '../googleMaps';
+import MapPage from '../services/googleMaps';
 import { choiceDriver } from '../services/callBackend';
 
 interface RideRequestPageProps {

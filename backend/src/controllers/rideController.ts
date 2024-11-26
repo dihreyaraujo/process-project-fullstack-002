@@ -3,8 +3,6 @@ import { calculateRoute } from '../services/googleMapsService';
 import { validateRideRequest, validateRideConfirm, validateDriver, validateCustomer } from '../services/validationService';
 import { DriverRepository } from '../repositories/driverRepository';
 import { RideRepository } from '../repositories/rideRepository';
-// import { driversMock } from '../mocks/driversMock';
-import { mockHistoric } from '../mocks/historicMock';
 
 export const getRideEstimate = async (req: Request, res: Response) => {
   try {
@@ -76,9 +74,7 @@ export const rideConfirm = async (req: Request, res: Response) => {
       driver_name,
       value
     }
-    console.log(rideDatabase);
     await RideRepository.saveRide(rideDatabase);
-    // mockHistoric.push(rideDatabase);
     res.status(200).json({ success: true });
   } catch (error: any) {
     const errorMessage = error.message;
@@ -99,16 +95,15 @@ export const customerRides = async (req: Request, res: Response) => {
 
     validateCustomer(customer_id);
 
-    const ridesCostumer = await RideRepository.getRidesByCustomer(customer_id);
-    // const ridesCostumer = mockHistoric.filter((ride) => ride.customer_id === customer_id);
+    const ridesCustomer = await RideRepository.getRidesByCustomer(customer_id);
 
-    if (ridesCostumer.length === 0) {
+    if (!ridesCustomer || ridesCustomer.length === 0) {
       throw new Error("Nenhuma corrida registrada");
     }
 
     if (driver_id) {
       await validateDriver(Number(driver_id));
-      const filterRidesByDriver = ridesCostumer.filter((ride) => ride.driver_id === Number(driver_id));
+      const filterRidesByDriver = ridesCustomer.filter((ride) => ride.driver_id === Number(driver_id));
       const rides = filterRidesByDriver.map((ride: any) => {
         const formatRidesResponse = {
           id: ride.id,
@@ -131,7 +126,7 @@ export const customerRides = async (req: Request, res: Response) => {
       }
       res.status(200).json(formatResponseWithDriver);
     } else {
-      const ridesNoFilter = ridesCostumer.map((ride) => {
+      const ridesNoFilter = ridesCustomer.map((ride) => {
         const formatRidesResponse = {
           id: ride.id,
           date: ride.date,

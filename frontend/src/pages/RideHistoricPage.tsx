@@ -1,6 +1,5 @@
 import { Component } from "react";
 import { getDrivers, rideHistoric } from "../services/callBackend";
-import { driversMock } from "../mocks/driversMock";
 
 interface RideRequestPageProps {
   onStatusChange: (statusPage:string) => void;
@@ -104,7 +103,6 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
 
   rideHistoricList = () => {
     const { historicCustomerList }: any = this.state;
-    console.log('RIDES: ', historicCustomerList.rides);
     const historicListElement = historicCustomerList.rides.map((historic: any) => {
       const historicHtml = (
         <div className="historic-container" key={historic.id}>
