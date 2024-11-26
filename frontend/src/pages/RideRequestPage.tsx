@@ -1,12 +1,9 @@
 import { Component } from 'react';
 import { rideRequestInfo } from '../services/callBackend';
+import { IRideRequestPageProps } from '../interfaces/IRideRequestPageProps';
+import { IRideEstimate } from '../interfaces/IRideEstimate';
 
-interface RideRequestPageProps {
-  onStatusChange: (statusPage:string) => void;
-  onStatusRideOptions: (rideOptions: object) => void;
-}
-
-class RideRequestPage extends Component<RideRequestPageProps> {
+class RideRequestPage extends Component<IRideRequestPageProps> {
   state = {
     customer_id: '',
     origin: '',
@@ -14,24 +11,24 @@ class RideRequestPage extends Component<RideRequestPageProps> {
     error: ''
   }
 
-  submitBtn = async (event: any) => {
+  submitBtn = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
     try {
       const { customer_id, origin, destination } = this.state
-      const responseRideOptions = await rideRequestInfo(customer_id, origin, destination);
-      this.props.onStatusRideOptions({ ...responseRideOptions, customer_id, originName: origin, destinationName: destination });
-      this.props.onStatusChange('rideOptions');
+      const responseRideOptions: IRideEstimate = await rideRequestInfo(customer_id, origin, destination);
+      this.props.onStatusRideOptions?.({ ...responseRideOptions, customer_id, originName: origin, destinationName: destination });
+      this.props.onStatusChange?.('rideOptions');
     } catch (err: any) {
       this.setState({ error: err.message });
     }
   }
 
-  onChangeInput = ({ target }: any) => {
-    const stateField = target.id;
+  onChangeInput = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
+    const stateField: string = target.id;
     this.setState({ [stateField]: target.value })
   }
 
-  formRideRequest = () => {
+  formRideRequest = (): JSX.Element => {
     const { customer_id, origin, destination, error } = this.state;
     return (
       <form id='request-form'>

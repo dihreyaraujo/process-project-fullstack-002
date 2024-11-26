@@ -1,11 +1,10 @@
 import { Component } from "react";
 import { getDrivers, rideHistoric } from "../services/callBackend";
+import { IRideRequestPageProps } from "../interfaces/IRideRequestPageProps";
+import { IRideHistoricResponse } from "../interfaces/IRideHistoricResponse";
+import { IDriver } from "../interfaces/IDriver";
 
-interface RideRequestPageProps {
-  onStatusChange: (statusPage:string) => void;
-}
-
-class RideHistoricPage extends Component<RideRequestPageProps> {
+class RideHistoricPage extends Component<IRideRequestPageProps> {
 
   state = {
     historicCustomerList: [],
@@ -20,14 +19,14 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     await this.rideListFilter()
   }
 
-  onChangeDriver = ({ target }: any) => {
+  onChangeDriver = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState(({ driverFilter: target.value }));
   }
 
-  applyFilterBtn = async () => {
+  applyFilterBtn = async (): Promise<void> => {
     try {
       const { customer_id } = this.state;
-      const rideCustomerHistoric = await rideHistoric(customer_id);
+      const rideCustomerHistoric: IRideHistoricResponse = await rideHistoric(customer_id);
       this.setState({ historicCustomerList: rideCustomerHistoric }, () => {
         const { driverFilter } = this.state;
         if (driverFilter !== 'Todos') {
@@ -44,18 +43,18 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     }
   }
 
-  customerIdInputChange = ({ target }: any) => {
+  customerIdInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ customer_id: target.value });
   }
 
-  rideListFilter = async () => {
-    const drivers = await getDrivers();
-    const elementOptionsDrivers = drivers.map((driver: any) => {
+  rideListFilter = async (): Promise<void> => {
+    const drivers: IDriver[] = await getDrivers();
+    const elementOptionsDrivers: JSX.Element[] = drivers.map((driver: IDriver) => {
       return (
-        <option id={ driver.id }>{ driver.name }</option>
+        <option id={ driver.id.toString() }>{ driver.name }</option>
       )
     })
-    const filterDrivers = (
+    const filterDrivers: JSX.Element = (
       <form className="historic-form">
         <label htmlFor="userid-input">
           <p>Usuário:</p>
@@ -71,7 +70,7 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     this.setState({ formFilter: filterDrivers });
   }
 
-  createFormatDate = (date: string) => {
+  createFormatDate = (date: string): string => {
     const nowDate = new Date(date);
     const day = nowDate.getDay();
     const month = nowDate.getMonth();
@@ -81,13 +80,13 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     return `${day}/${month}/${year} - ${hour}:${minute}`; 
   }
 
-  rideHistoricListByDriverName = () => {
+  rideHistoricListByDriverName = (): void => {
     const { historicCustomerList, driverFilter }: any = this.state;
-    const driverListFilter = historicCustomerList.rides.filter((driver: any) => driver.driver.name === driverFilter);
-    const historicListElement = driverListFilter.map((historic: any) => {
+    const driverListFilter: IRideHistoricResponse[] = historicCustomerList.rides.filter((driver: IRideHistoricResponse) => driver.driver.name === driverFilter);
+    const historicListElement: JSX.Element[] = driverListFilter.map((historic: IRideHistoricResponse) => {
       const historicHtml = (
         <div className="historic-container" key={historic.id}>
-          <p className="historic-info"><strong>Data:</strong> { this.createFormatDate(historic.date) }</p>
+          <p className="historic-info"><strong>Data:</strong> { this.createFormatDate(historic.date.toString()) }</p>
           <p className="historic-info"><strong>Motorista:</strong> { historic.driver.name}</p>
           <p className="historic-info"><strong>Origem:</strong> { historic.origin }</p>
           <p className="historic-info"><strong>Destino:</strong> { historic.destination }</p>
@@ -101,12 +100,12 @@ class RideHistoricPage extends Component<RideRequestPageProps> {
     this.setState({ historicFilter: historicListElement });
   }
 
-  rideHistoricList = () => {
+  rideHistoricList = (): void => {
     const { historicCustomerList }: any = this.state;
-    const historicListElement = historicCustomerList.rides.map((historic: any) => {
+    const historicListElement: JSX.Element[] = historicCustomerList.rides.map((historic: IRideHistoricResponse) => {
       const historicHtml = (
         <div className="historic-container" key={historic.id}>
-          <p className="historic-info"><strong>Data:</strong> { this.createFormatDate(historic.date) }</p>
+          <p className="historic-info"><strong>Data:</strong> { this.createFormatDate(historic.date.toString()) }</p>
           <p className="historic-info"><strong>Motorista:</strong> { historic.driver.name}</p>
           <p className="historic-info"><strong>Origem:</strong> { historic.origin }</p>
           <p className="historic-info"><strong>Destino:</strong> { historic.destination }</p>

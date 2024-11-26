@@ -14,15 +14,15 @@ class App extends Component {
     rideOptions: {}
   }
 
-  homePageBtn = () => {
+  homePageBtn = (): void => {
     this.setState({ page: 'rideRequest' })
   }
 
-  changePage = (statusPage: string) => {
+  changePage = (statusPage: string): void => {
     this.setState({ page: statusPage });
   }
 
-  rideOptionsEstimate = (rideOptions: object) => {
+  rideOptionsEstimate = (rideOptions: object): void => {
     this.setState({ rideOptions });
   }
 
