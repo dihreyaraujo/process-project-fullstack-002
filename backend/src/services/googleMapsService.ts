@@ -39,3 +39,7 @@ export const calculateRoute = async (origin: string, destination: string) => {
   };
   return { infoRoute, routeResponse: response.data };
 };
+
+export const getApiKey = () => {
+  return process.env.GOOGLE_API_KEY;
+}

@@ -3,7 +3,7 @@ import { DriverRepository } from '../repositories/driverRepository';
 export const validateRideRequest = (customer_id: string, origin: string, destination: string): void => {
   if (!customer_id || customer_id === "" || !origin || !destination) {
     throw new Error("Não há presença de todos os dados necessários.")
-  } else if (origin === destination) {
+  } else if (origin.toLowerCase() === destination.toLowerCase()) {
     throw new Error("A rota de origem não pode ser igual a rota de destino.")
   }
 };

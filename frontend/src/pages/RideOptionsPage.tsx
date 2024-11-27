@@ -3,10 +3,44 @@ import MapPage from '../services/googleMaps';
 import { choiceDriver } from '../services/callBackend';
 import { IRideRequestPageProps } from '../interfaces/IRideRequestPageProps';
 import { IRideEstimateOptions } from '../interfaces/IRideEstimate';
+import axios from 'axios';
+
+declare global {
+  interface Window {
+    initMap: () => void;
+  }
+}
+
 
 class RideOptionsPage extends Component<IRideRequestPageProps> {
   state = {
-    errorMessage: ''
+    errorMessage: '',
+    isGoogleMapsLoaded: false
+  }
+  
+
+  async componentDidMount(): Promise<void> {
+    const existingScript = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
+
+    const apiKey = await axios.get('http://localhost:8080/ride/apiKey');
+
+    if (!existingScript) {
+      const script = document.createElement('script');
+
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey.data.apiKey}&libraries=places&loading=async&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+
+      window.initMap = () => {
+        console.log('Google Maps API carregada');
+        this.setState({ isGoogleMapsLoaded: true });
+      };
+
+      document.head.appendChild(script);
+    } else {
+      console.log('Google Maps API já carregada');
+      this.setState({ isGoogleMapsLoaded: true });
+    }
   }
 
 
@@ -64,14 +98,15 @@ class RideOptionsPage extends Component<IRideRequestPageProps> {
   }
 
   render() {
-    const { errorMessage } = this.state;
+    const { errorMessage, isGoogleMapsLoaded } = this.state;
     return (
       <div className="drivers-container">
         <div className='drivers-info'>
           {this.driverList()}
         </div>
         { errorMessage !== '' ? <p id='rideErrorMessage'>{errorMessage}</p> : '' }
-        <MapPage origin={this.coordenadas.origin} destination={this.coordenadas.destination} />
+        { isGoogleMapsLoaded && <MapPage origin={this.coordenadas.origin} destination={this.coordenadas.destination} />}
+
       </div>
     );
   }
