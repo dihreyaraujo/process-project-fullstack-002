@@ -25,10 +25,10 @@ export class RidesHistoricCustomer {
         const rides = filterRidesByDriver.map((ride: any) => {
           const formatRidesResponse = {
             id: ride.id,
-            date: ride.date,
+            date: new Date(ride.date),
             origin: ride.origin,
             destination: ride.destination,
-            distance: Number(ride.distance.toFixed(2)),
+            distance: ride.distance.toFixed(2),
             duration: ride.duration,
             driver: {
               id: Number(ride.driver_id),
@@ -40,14 +40,14 @@ export class RidesHistoricCustomer {
         })
         const formatResponseWithDriver: IHistoricResponse = {
           customer_id,
-          rides: rides.sort((rideA, rideB) => new Date(rideB.date).getTime() - new Date(rideA.date).getTime())
+          rides: rides.sort((rideA, rideB) => rideB.date.getTime() - rideA.date.getTime())
         }
         res.status(200).json(formatResponseWithDriver);
       } else {
         const ridesNoFilter = ridesCustomer.map((ride: any) => {
           const formatRidesResponse = {
             id: ride.id,
-            date: ride.date,
+            date: new Date(ride.date),
             origin: ride.origin,
             destination: ride.destination,
             distance: ride.distance,
@@ -63,7 +63,7 @@ export class RidesHistoricCustomer {
     
         const formatResponse: IHistoricResponse = {
           customer_id,
-          rides: ridesNoFilter.sort((rideA: any, rideB: any) => new Date(rideB.date).getTime() - new Date(rideA.date).getTime())
+          rides: ridesNoFilter.sort((rideA: any, rideB: any) => rideB.date.getTime() - rideA.date.getTime())
         };
     
         res.status(200).json(formatResponse);

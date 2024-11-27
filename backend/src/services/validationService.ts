@@ -13,7 +13,7 @@ export const validateRideConfirm = async (customer_id: string, origin: string, d
   const validateDriver: IDriver | null = await DriverRepository.getDriverById(driver_id);
   if (!validateDriver) {
     throw new Error("Motorista informado não foi encontrado")
-  } else if (distance < validateDriver.minKm) {
+  } else if ((distance / 1000) < validateDriver.minKm) {
     throw new Error("A distância da corrida não é compatível com o motorista selecionado");
   }
 }

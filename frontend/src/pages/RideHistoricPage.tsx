@@ -90,8 +90,8 @@ class RideHistoricPage extends Component<IRideRequestPageProps> {
           <p className="historic-info"><strong>Motorista:</strong> { historic.driver.name}</p>
           <p className="historic-info"><strong>Origem:</strong> { historic.origin }</p>
           <p className="historic-info"><strong>Destino:</strong> { historic.destination }</p>
-          <p className="historic-info"><strong>Distância:</strong> { historic.distance.toFixed(2) }km</p>
-          <p className="historic-info"><strong>Duração:</strong> { Number(historic.duration).toFixed(0) } minutos</p>
+          <p className="historic-info"><strong>Distância:</strong> { (historic.distance / 1000).toFixed(2) }km</p>
+          <p className="historic-info"><strong>Duração:</strong> { (Number(Number(historic.duration.replace(/\D/g, "")).toFixed(0)) / 60) } minutos</p>
           <p className="historic-info"><strong>Valor:</strong> R${ historic.value }</p>
         </div>
       );
@@ -109,8 +109,8 @@ class RideHistoricPage extends Component<IRideRequestPageProps> {
           <p className="historic-info"><strong>Motorista:</strong> { historic.driver.name}</p>
           <p className="historic-info"><strong>Origem:</strong> { historic.origin }</p>
           <p className="historic-info"><strong>Destino:</strong> { historic.destination }</p>
-          <p className="historic-info"><strong>Distância:</strong> { historic.distance.toFixed(2) }km</p>
-          <p className="historic-info"><strong>Duração:</strong> { Number(historic.duration).toFixed(0) } minutos</p>
+          <p className="historic-info"><strong>Distância:</strong> { (historic.distance / 1000).toFixed(2) }km</p>
+          <p className="historic-info"><strong>Duração:</strong> { (Number(Number(historic.duration.replace(/\D/g, ""))) / 60).toFixed(0) } minutos</p>
           <p className="historic-info"><strong>Valor:</strong> R${ historic.value }</p>
         </div>
       );

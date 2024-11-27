@@ -10,7 +10,7 @@ export class GetRideEstimate {
   
       validateRideRequest(customer_id, origin, destination);
   
-      const { distance, duration, startLocation, endLocation } = await calculateRoute(origin, destination);
+      const { infoRoute: { distance, duration, startLocation, endLocation }, routeResponse } = await calculateRoute(origin, destination);
   
       const drivers: IDriver[] = await DriverRepository.getAllDrivers();
   
@@ -40,7 +40,7 @@ export class GetRideEstimate {
             rating: Number(driver.review.rating.split('')[0]),
             comment: driver.review.comment,
           },
-          value: Number((distance * driver.rate).toFixed(2)),
+          value: Number(((distance / 1000) * driver.rate).toFixed(2)),
         }));
   
       options.sort((a, b) => a.value - b.value);
@@ -49,12 +49,9 @@ export class GetRideEstimate {
         origin: startLocation,
         destination: endLocation,
         distance,
-        duration: duration.toString(),
+        duration,
         options,
-        routeResponse: {
-          method: "POST",
-          endpoint: "/ride/estimate"
-        }
+        routeResponse
       }
   
       res.status(200).json(responseEstimate);

@@ -26,8 +26,8 @@ export const calculateRoute = async (origin: string, destination: string) => {
 
   const data = response.data.routes[0];
   const infoRoute = {
-    distance: data.distanceMeters / 1000,
-    duration: Number(data.duration.replace(/\D/g, '')) / 60,
+    distance: data.distanceMeters,
+    duration: data.duration,
     startLocation: {
       latitude: data.legs[0].startLocation.latLng.latitude,
       longitude: data.legs[0].startLocation.latLng.longitude,
@@ -37,5 +37,5 @@ export const calculateRoute = async (origin: string, destination: string) => {
       longitude: data.legs[0].endLocation.latLng.longitude,
     }
   };
-  return infoRoute;
+  return { infoRoute, routeResponse: response.data };
 };
