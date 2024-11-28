@@ -21,4 +21,8 @@ rideRouter.get('/apiKey', (req: Request, res: Response) => {
 
 rideRouter.get('/:customer_id', async (req: Request, res: Response) => await RidesHistoricCustomer.customerRides(req, res));
 
+rideRouter.get('/', (req: Request, res: Response) => {
+  res.status(400).json({ error_code: "INVALID_DATA", error_description: "Por favor, informar usuário." })
+})
+
 export default rideRouter;
